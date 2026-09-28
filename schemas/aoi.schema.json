@@ -1,0 +1,25 @@
+{
+  "properties": {
+    "type": {
+      "default": "Polygon",
+      "title": "Type",
+      "type": "string"
+    },
+    "coordinates": {
+      "items": {
+        "items": {
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "type": "array"
+      },
+      "title": "Coordinates",
+      "type": "array"
+    }
+  },
+  "title": "Aoi",
+  "type": "object",
+  "description": "SatQuery aoi schema"
+}

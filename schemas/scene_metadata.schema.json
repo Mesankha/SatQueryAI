@@ -1,0 +1,82 @@
+{
+  "properties": {
+    "scene_id": {
+      "title": "Scene Id",
+      "type": "string"
+    },
+    "sensor": {
+      "title": "Sensor",
+      "type": "string"
+    },
+    "modality": {
+      "title": "Modality",
+      "type": "string"
+    },
+    "acquisition_time": {
+      "format": "date-time",
+      "title": "Acquisition Time",
+      "type": "string"
+    },
+    "geometry_wkt": {
+      "title": "Geometry Wkt",
+      "type": "string"
+    },
+    "file_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "File Path"
+    },
+    "cloud_cover": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cloud Cover"
+    },
+    "object": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Object"
+    },
+    "paired_scene_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Paired Scene Id"
+    }
+  },
+  "required": [
+    "sensor",
+    "modality",
+    "acquisition_time",
+    "geometry_wkt"
+  ],
+  "title": "Scene Metadata",
+  "type": "object",
+  "description": "SatQuery scene metadata schema"
+}

@@ -1,0 +1,145 @@
+{
+  "$defs": {
+    "ModelOutputs": {
+      "properties": {
+        "caption": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Caption"
+        },
+        "vqa_answer": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Vqa Answer"
+        },
+        "grounding_bbox": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Grounding Bbox"
+        },
+        "change_description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Change Description"
+        },
+        "fusion_statement": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fusion Statement"
+        }
+      },
+      "title": "ModelOutputs",
+      "type": "object"
+    },
+    "ScoreBreakdown": {
+      "properties": {
+        "semantic_sim": {
+          "default": 0.0,
+          "title": "Semantic Sim",
+          "type": "number"
+        },
+        "geo_score": {
+          "default": 0.0,
+          "title": "Geo Score",
+          "type": "number"
+        },
+        "temporal_score": {
+          "default": 0.0,
+          "title": "Temporal Score",
+          "type": "number"
+        },
+        "modality_score": {
+          "default": 0.0,
+          "title": "Modality Score",
+          "type": "number"
+        },
+        "change_score": {
+          "default": 0.0,
+          "title": "Change Score",
+          "type": "number"
+        }
+      },
+      "title": "ScoreBreakdown",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "image_id": {
+      "title": "Image Id",
+      "type": "string"
+    },
+    "rank": {
+      "default": 1,
+      "title": "Rank",
+      "type": "integer"
+    },
+    "score": {
+      "default": 0.0,
+      "title": "Score",
+      "type": "number"
+    },
+    "score_breakdown": {
+      "$ref": "#/$defs/ScoreBreakdown"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "title": "Metadata",
+      "type": "object"
+    },
+    "model_outputs": {
+      "$ref": "#/$defs/ModelOutputs"
+    },
+    "explanation_text": {
+      "default": "",
+      "title": "Explanation Text",
+      "type": "string"
+    },
+    "confidence_note": {
+      "default": "",
+      "title": "Confidence Note",
+      "type": "string"
+    }
+  },
+  "required": [
+    "image_id"
+  ],
+  "title": "Result Item",
+  "type": "object",
+  "description": "SatQuery result item schema"
+}

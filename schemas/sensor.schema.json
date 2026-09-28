@@ -1,0 +1,10 @@
+{
+  "type": "string",
+  "enum": [
+    "Sentinel-1",
+    "Sentinel-2",
+    "both"
+  ],
+  "title": "Sensor",
+  "description": "SatQuery sensor enumeration"
+}

@@ -1,0 +1,32 @@
+{
+  "properties": {
+    "semantic_sim": {
+      "default": 0.0,
+      "title": "Semantic Sim",
+      "type": "number"
+    },
+    "geo_score": {
+      "default": 0.0,
+      "title": "Geo Score",
+      "type": "number"
+    },
+    "temporal_score": {
+      "default": 0.0,
+      "title": "Temporal Score",
+      "type": "number"
+    },
+    "modality_score": {
+      "default": 0.0,
+      "title": "Modality Score",
+      "type": "number"
+    },
+    "change_score": {
+      "default": 0.0,
+      "title": "Change Score",
+      "type": "number"
+    }
+  },
+  "title": "Score Breakdown",
+  "type": "object",
+  "description": "SatQuery score breakdown schema"
+}

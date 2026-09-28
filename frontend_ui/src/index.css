@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+
+@theme {
+  --color-bg: #0A0D12;
+  --color-bg-elevated: #0F131A;
+  --color-surface: #12161E;
+  --color-surface-hover: #161B24;
+  --color-border: #1D232D;
+  --color-border-light: #262E3A;
+  --color-text-primary: #E8EDF3;
+  --color-text-secondary: #8B96A5;
+  --color-text-tertiary: #54606F;
+  --color-cyan: #4FD8E8;
+  --color-teal: #3BC9A8;
+  --color-blue: #5B9FEF;
+  --color-amber: #E8B84F;
+  --color-rose: #E8637A;
+  --color-green: #4FD8A0;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+@keyframes sq-spin-rev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+@keyframes sq-scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(600%); } }
+@keyframes sq-msg-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes sq-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+.animate-spin-rev { animation: sq-spin-rev 20s linear infinite; }
+.animate-scan { animation: sq-scan 3.6s linear infinite; }
+.animate-msg-in { animation: sq-msg-in 380ms cubic-bezier(0.16,1,0.3,1); }
+.animate-fade-in { animation: sq-fade-in 200ms ease; }
+
+::selection { background: color-mix(in srgb, var(--color-cyan) 27%, transparent); }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--color-border-light); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }

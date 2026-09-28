@@ -1,0 +1,38 @@
+# --- Core ---
+pydantic>=2.0
+python-dateutil
+
+# --- M1 Parser ---
+transformers>=4.30
+torch>=2.0
+accelerate
+bitsandbytes
+dateparser
+spacy>=3.0          # optional, for NER fallback
+
+# --- M2 Retrieval ---
+faiss-cpu             # or faiss-gpu if CUDA available
+sentence-transformers>=2.2.0
+shapely
+geopandas
+
+# --- M3 VLM (GeoChat) ---
+accelerate
+bitsandbytes
+peft                  # for LoRA
+
+# --- M4 Change ---
+numpy
+rasterio
+
+# --- M5 Controller ---
+# (no extra deps beyond core)
+
+# --- M6 API ---
+fastapi
+uvicorn[standard]
+python-multipart
+
+# --- Testing ---
+pytest
+httpx                 # for FastAPI test client

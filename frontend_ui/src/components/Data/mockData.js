@@ -1,0 +1,17 @@
+
+export const SCENES = [
+  { id: "SC-0417", name: "Bengaluru Metropolitan Belt", sensor: "Sentinel-2", modality: "optical", date: "2026-07-18", origin: "gee_assam", resolution: "10m/px", tags: ["vegetation", "urban", "bengaluru"], lat: 12.9716, lon: 77.5946 },
+  { id: "SC-0418", name: "Bengaluru Metropolitan Belt", sensor: "Sentinel-2", modality: "optical", date: "2024-07-12", origin: "gee_assam", resolution: "10m/px", tags: ["vegetation", "urban", "bengaluru"], lat: 12.9716, lon: 77.5946, pairOf: "SC-0417" },
+  { id: "SC-0332", name: "Brahmaputra Floodplain, Assam", sensor: "Sentinel-1", modality: "sar", date: "2026-06-29", origin: "gee_assam", resolution: "20m/px", tags: ["flood", "water", "assam"], lat: 26.2006, lon: 92.9376 },
+  { id: "SC-0331", name: "Brahmaputra Floodplain, Assam", sensor: "Sentinel-1", modality: "sar", date: "2026-04-02", origin: "gee_assam", resolution: "20m/px", tags: ["flood", "water", "assam"], lat: 26.2006, lon: 92.9376, pairOf: "SC-0332" },
+  { id: "SC-0206", name: "Sundarbans Mangrove Belt", sensor: "Sentinel-2", modality: "optical", date: "2026-05-04", origin: "bigearthnet_txt", resolution: "10m/px", tags: ["mangrove", "coastal", "sundarbans"], lat: 21.9497, lon: 88.9468 },
+  { id: "SC-0512", name: "Chennai Reservoir Cluster", sensor: "Sentinel-2", modality: "optical", date: "2026-08-01", origin: "cdvqa", resolution: "10m/px", tags: ["reservoir", "water", "chennai"], lat: 13.0827, lon: 80.2707 },
+   { id: "SC-0601", name: "Mumbai Coastal Corridor", sensor: "Sentinel-2", modality: "optical", date: "2026-07-25", origin: "gee_assam", resolution: "10m/px", tags: ["urban", "coastal", "mumbai"], lat: 19.0760, lon: 72.8777 },
+  { id: "SC-0602", name: "Mumbai Coastal Corridor", sensor: "Sentinel-1", modality: "sar", date: "2026-03-11", origin: "gee_assam", resolution: "20m/px", tags: ["urban", "coastal", "mumbai"], lat: 19.0760, lon: 72.8777, pairOf: "SC-0601" },
+  { id: "SC-0703", name: "Thar Desert Fringe, Rajasthan", sensor: "Sentinel-2", modality: "optical", date: "2026-06-14", origin: "bigearthnet_txt", resolution: "10m/px", tags: ["desert", "arid", "rajasthan"], lat: 27.0238, lon: 74.2179 },
+  { id: "SC-0810", name: "Western Ghats Forest Belt", sensor: "Sentinel-2", modality: "optical", date: "2026-05-30", origin: "gee_assam", resolution: "10m/px", tags: ["forest", "vegetation", "ghats"], lat: 15.2993, lon: 74.1240 },
+  { id: "SC-0811", name: "Western Ghats Forest Belt", sensor: "Sentinel-2", modality: "optical", date: "2024-05-22", origin: "gee_assam", resolution: "10m/px", tags: ["forest", "vegetation", "ghats"], lat: 15.2993, lon: 74.1240, pairOf: "SC-0810" },
+  { id: "SC-0925", name: "Kolkata Delta Region", sensor: "Sentinel-1", modality: "sar", date: "2026-07-02", origin: "cdvqa", resolution: "20m/px", tags: ["delta", "water", "kolkata"], lat: 22.5726, lon: 88.3639 },
+  { id: "SC-1042", name: "Ahmedabad Industrial Belt", sensor: "Sentinel-2", modality: "optical", date: "2026-08-10", origin: "gee_assam", resolution: "10m/px", tags: ["urban", "industrial", "ahmedabad"], lat: 23.0225, lon: 72.5714 },
+  { id: "SC-1150", name: "Himalayan Foothills, Uttarakhand", sensor: "Sentinel-2", modality: "optical", date: "2026-04-19", origin: "bigearthnet_txt", resolution: "10m/px", tags: ["mountain", "forest", "uttarakhand"], lat: 30.0668, lon: 79.0193 },
+];

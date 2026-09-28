@@ -1,0 +1,62 @@
+[
+  {
+    "image_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "rank": 1,
+    "score": 0.91,
+    "score_breakdown": {"semantic_sim":0.85,"geo_score":0.95,"temporal_score":0.90,"modality_score":1.0,"change_score":0.0},
+    "metadata": {"satellite":"Sentinel-2","sensor":"Sentinel-2","acquisition_time":"2024-03-15T10:30:00Z","location_label":"Central Europe"},
+    "model_outputs": {"caption":"Residential area with sparse vegetation.","vqa_answer":null,"grounding_bbox":null,"change_description":null,"fusion_statement":null},
+    "explanation_text": "This result is ranked #1 with a composite score of 0.91. The image was acquired by Sentinel-2 on 2024-03-15 over Central Europe. Caption: Residential area with sparse vegetation. These findings are consistent with the query criteria.",
+    "confidence_note": "Analysis completed using primary models."
+  },
+  {
+    "image_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    "rank": 1,
+    "score": 0.88,
+    "score_breakdown": {"semantic_sim":0.82,"geo_score":0.90,"temporal_score":0.85,"modality_score":1.0,"change_score":0.0},
+    "metadata": {"satellite":"Sentinel-2","sensor":"Sentinel-2","acquisition_time":"2024-06-20T08:15:00Z","location_label":"Delhi region"},
+    "model_outputs": {"caption":null,"vqa_answer":"The land cover is predominantly agriculture.","grounding_bbox":null,"change_description":null,"fusion_statement":null},
+    "explanation_text": "This result is ranked #1 with a composite score of 0.88. The image was acquired by Sentinel-2 on 2024-06-20 over Delhi region. VQA answer: The land cover is predominantly agriculture. These findings are consistent with the query criteria.",
+    "confidence_note": "Analysis completed using primary models."
+  },
+  {
+    "image_id": "d4e5f6a7-b8c9-0123-def1-234567890123",
+    "rank": 1,
+    "score": 0.75,
+    "score_breakdown": {"semantic_sim":0.70,"geo_score":0.80,"temporal_score":0.60,"modality_score":0.5,"change_score":0.85},
+    "metadata": {"satellite":"Sentinel-1","sensor":"Sentinel-1","acquisition_time":"2023-08-10T06:45:00Z","location_label":"Assam flood zone"},
+    "model_outputs": {"caption":null,"vqa_answer":null,"grounding_bbox":null,"change_description":"Water body extent increased between the two observations, consistent with flooding.","fusion_statement":null},
+    "explanation_text": "This result is ranked #1 with a composite score of 0.75. The image was acquired by Sentinel-1 on 2023-08-10 over Assam flood zone. Change description: Water body extent increased between the two observations, consistent with flooding. These findings are consistent with the query criteria.",
+    "confidence_note": "Note: One or more analysis tools used fallback behavior."
+  },
+  {
+    "image_id": "f6a7b8c9-d0e1-2345-f123-456789012345",
+    "rank": 1,
+    "score": 0.82,
+    "score_breakdown": {"semantic_sim":0.78,"geo_score":0.85,"temporal_score":0.80,"modality_score":1.0,"change_score":0.0},
+    "metadata": {"satellite":"Sentinel-1/2","sensor":"both","acquisition_time":"2024-07-01T05:00:00Z","location_label":"Assam forest region"},
+    "model_outputs": {"caption":null,"vqa_answer":null,"grounding_bbox":null,"change_description":null,"fusion_statement":"Optical observation shows dense forest canopy. SAR observation shows consistent backscatter patterns. Combined, these observations are consistent with healthy forest cover."},
+    "explanation_text": "This result is ranked #1 with a composite score of 0.82. The image was acquired by both on 2024-07-01 over Assam forest region. Fusion statement: Optical observation shows dense forest canopy. SAR observation shows consistent backscatter patterns. Combined, these observations are consistent with healthy forest cover. These findings are consistent with the query criteria.",
+    "confidence_note": "Analysis completed using primary models."
+  },
+  {
+    "image_id": "deadbeef-1234-5678-9abc-def012345678",
+    "rank": 1,
+    "score": 0.0,
+    "score_breakdown": {"semantic_sim":0.0,"geo_score":0.0,"temporal_score":0.0,"modality_score":0.0,"change_score":0.0},
+    "metadata": {"satellite":"","sensor":"","acquisition_time":"","location_label":""},
+    "model_outputs": {"caption":null,"vqa_answer":null,"grounding_bbox":null,"change_description":null,"fusion_statement":null},
+    "explanation_text": "No matching imagery found for the specified criteria.",
+    "confidence_note": "Note: The query was parsed using fallback rules; interpret results with caution."
+  },
+  {
+    "image_id": "user_upload_001",
+    "rank": 1,
+    "score": 0.95,
+    "score_breakdown": {"semantic_sim":0.92,"geo_score":1.0,"temporal_score":0.95,"modality_score":1.0,"change_score":0.0},
+    "metadata": {"satellite":"UserUpload","sensor":"UserUpload","acquisition_time":"2024-08-20T12:00:00Z","location_label":"User uploaded image"},
+    "model_outputs": {"caption":null,"vqa_answer":"The land cover type is urban/residential with built-up areas and roads.","grounding_bbox":null,"change_description":null,"fusion_statement":null},
+    "explanation_text": "This result is ranked #1 with a composite score of 0.95. The image was acquired by UserUpload on 2024-08-20 over User uploaded image. VQA answer: The land cover type is urban/residential with built-up areas and roads. These findings are consistent with the query criteria.",
+    "confidence_note": "Analysis completed using primary models."
+  }
+]

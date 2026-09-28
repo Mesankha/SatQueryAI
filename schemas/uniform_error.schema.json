@@ -1,0 +1,41 @@
+{
+  "$defs": {
+    "ErrorType": {
+      "enum": [
+        "no_candidates",
+        "model_unavailable",
+        "invalid_input",
+        "timeout",
+        "unknown"
+      ],
+      "title": "ErrorType",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "module": {
+      "title": "Module",
+      "type": "string"
+    },
+    "error_type": {
+      "$ref": "#/$defs/ErrorType",
+      "default": "unknown"
+    },
+    "message": {
+      "default": "",
+      "title": "Message",
+      "type": "string"
+    },
+    "fallback_applied": {
+      "default": false,
+      "title": "Fallback Applied",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "module"
+  ],
+  "title": "Uniform Error",
+  "type": "object",
+  "description": "SatQuery uniform error schema"
+}

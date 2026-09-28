@@ -1,0 +1,50 @@
+{
+  "properties": {
+    "change_score": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Change Score"
+    },
+    "change_description": {
+      "default": "",
+      "title": "Change Description",
+      "type": "string"
+    },
+    "optical_metrics": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Optical Metrics"
+    },
+    "sar_metrics": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sar Metrics"
+    }
+  },
+  "title": "Change Result",
+  "type": "object",
+  "description": "SatQuery change result schema"
+}

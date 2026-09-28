@@ -1,0 +1,69 @@
+{
+  "$defs": {
+    "ToolCall": {
+      "properties": {
+        "tool_name": {
+          "title": "Tool Name",
+          "type": "string"
+        },
+        "model_name": {
+          "title": "Model Name",
+          "type": "string"
+        },
+        "params": {
+          "additionalProperties": true,
+          "title": "Params",
+          "type": "object"
+        },
+        "latency_ms": {
+          "default": 0,
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "success": {
+          "default": true,
+          "title": "Success",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "tool_name",
+        "model_name"
+      ],
+      "title": "ToolCall",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "task_selected": {
+      "default": "",
+      "title": "Task Selected",
+      "type": "string"
+    },
+    "tools_called": {
+      "items": {
+        "$ref": "#/$defs/ToolCall"
+      },
+      "title": "Tools Called",
+      "type": "array"
+    },
+    "candidates_considered": {
+      "default": 0,
+      "title": "Candidates Considered",
+      "type": "integer"
+    },
+    "candidates_after_filter": {
+      "default": 0,
+      "title": "Candidates After Filter",
+      "type": "integer"
+    },
+    "fallback_used": {
+      "default": false,
+      "title": "Fallback Used",
+      "type": "boolean"
+    }
+  },
+  "title": "Execution Trace",
+  "type": "object",
+  "description": "SatQuery execution trace schema"
+}

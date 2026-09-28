@@ -1,0 +1,88 @@
+# M0 Catalog Configuration
+m0_catalog:
+  bigearthnet:
+    source_path: "./data/raw/bigearthnet"
+    enabled: true
+  cdvqa:
+    source_path: "./data/raw/cdvqa"
+    enabled: true
+  gee_assam:
+    project_id: "${GEE_PROJECT_ID}"
+    region: "Assam, India"
+    date_range: ["2023-01-01", "2024-12-31"]
+    enabled: true
+  output:
+    db_path: "./data/catalog.db"
+    image_root: "./data"
+    manifest_path: "./data/catalog_manifest.json"
+  lora_dataset:
+    output_dir: "./data/bigearthnet_lora"
+    max_samples: 5000
+    enabled: true
+
+# Legacy catalog config (for backward compatibility)
+catalog:
+  db_path: "./data/catalog.db"
+  image_root: "./data"
+
+# Parser Configuration (using local fallback as primary, no Anthropic)
+parser:
+  model_id: "microsoft/Phi-4-mini-instruct"
+  load_in_4bit: true
+  timeout_seconds: 5
+  fallback_enabled: true
+  use_local_fallback: true  # Use deterministic fallback as primary
+
+# Retrieval Configuration (M2)
+retrieval:
+  mock: false            # true = fixture mock (offline demo), false = real M2
+  text_embedder: "sentence-transformers/all-MiniLM-L6-v2"
+  top_k: 5
+
+# VLM Configuration (M3 - GeoChat)
+vlm:
+  mock: true            # true = mock M3, false = real 4-bit VLM (optical)
+  sar_mock: true        # true = mock SAR VLM, false = real SAR VLM (requires SAR LoRA)
+  model_path: "mbzuai-oryx/GeoChat"
+  load_in_4bit: true
+  inference_timeout: 30
+  lora_adapter_path: "./models/geochat_lora"          # Optical LoRA
+  sar_lora_adapter_path: "./models/geochat_sar_lora"  # SAR-specific LoRA
+  service_port: 8001
+  service_host: "0.0.0.0"
+
+# Change Detection Configuration (M4)
+change:
+  mock: true            # true = mock M4, false = real NDVI/log-ratio
+  sar_water_max_vv_db: -17.0        # initial defaults, explicitly untuned
+  sar_builtup_min_vv_db: -10.0
+  sar_builtup_min_vh_db: -20.0
+  ndvi_threshold: 0.5
+  sar_log_ratio_threshold: 2.0
+  enable_llm_polish: false
+
+# API Configuration (M6)
+api:
+  host: "0.0.0.0"
+  port: 8000
+  request_timeout: 60
+  replay_cache_dir: "./replay_cache"
+  max_replay_entries: 100
+
+# Session Configuration
+session:
+  storage_dir: "./data/sessions"
+  ttl_hours: 24
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  json_format: true
+
+# Paths
+paths:
+  catalog_db: "./data/catalog.db"
+  faiss_index: "./data/faiss.index"
+  upload_dir: "./data/uploads"
+  eval_splits: "./data/eval_splits.json"
+  scenes_dir: "./data/scenes"

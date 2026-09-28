@@ -1,0 +1,200 @@
+{
+  "$defs": {
+    "AOI": {
+      "properties": {
+        "type": {
+          "default": "Polygon",
+          "title": "Type",
+          "type": "string"
+        },
+        "coordinates": {
+          "items": {
+            "items": {
+              "items": {
+                "type": "number"
+              },
+              "type": "array"
+            },
+            "type": "array"
+          },
+          "title": "Coordinates",
+          "type": "array"
+        }
+      },
+      "title": "AOI",
+      "type": "object"
+    },
+    "Sensor": {
+      "enum": [
+        "Sentinel-1",
+        "Sentinel-2",
+        "both"
+      ],
+      "title": "Sensor",
+      "type": "string"
+    },
+    "TaskType": {
+      "enum": [
+        "search",
+        "vqa",
+        "caption",
+        "grounding",
+        "change",
+        "fusion"
+      ],
+      "title": "TaskType",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "query_text": {
+      "title": "Query Text",
+      "type": "string"
+    },
+    "task_type": {
+      "$ref": "#/$defs/TaskType",
+      "default": "search"
+    },
+    "location": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Location"
+    },
+    "aoi": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/AOI"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "start_date": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Start Date"
+    },
+    "end_date": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "End Date"
+    },
+    "sensor": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Sensor"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "object": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Object"
+    },
+    "event": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Event"
+    },
+    "change_flag": {
+      "default": false,
+      "title": "Change Flag",
+      "type": "boolean"
+    },
+    "question": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Question"
+    },
+    "referring_expression": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Referring Expression"
+    },
+    "confidence": {
+      "default": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "used_fallback": {
+      "default": false,
+      "title": "Used Fallback",
+      "type": "boolean"
+    },
+    "image_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Image Id"
+    }
+  },
+  "required": [
+    "query_text"
+  ],
+  "title": "Structured Query",
+  "type": "object",
+  "description": "SatQuery structured query schema"
+}

@@ -1,0 +1,13 @@
+{
+  "type": "string",
+  "enum": [
+    "search",
+    "vqa",
+    "caption",
+    "grounding",
+    "change",
+    "fusion"
+  ],
+  "title": "Task Type",
+  "description": "SatQuery task_type enumeration"
+}

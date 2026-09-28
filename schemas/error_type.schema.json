@@ -1,0 +1,12 @@
+{
+  "type": "string",
+  "enum": [
+    "no_candidates",
+    "model_unavailable",
+    "invalid_input",
+    "timeout",
+    "unknown"
+  ],
+  "title": "Error Type",
+  "description": "SatQuery error_type enumeration"
+}

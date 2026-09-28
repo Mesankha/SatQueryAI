@@ -1,0 +1,22 @@
+aois:
+  - name: "HUMAN_INPUT_REQUIRED_AOI_1"
+    lon: null   # HUMAN_INPUT_REQUIRED
+    lat: null   # HUMAN_INPUT_REQUIRED
+  - name: "HUMAN_INPUT_REQUIRED_AOI_2"
+    lon: null   # HUMAN_INPUT_REQUIRED
+    lat: null   # HUMAN_INPUT_REQUIRED
+  - name: "HUMAN_INPUT_REQUIRED_AOI_3"
+    lon: null   # HUMAN_INPUT_REQUIRED
+    lat: null   # HUMAN_INPUT_REQUIRED
+  - name: "HUMAN_INPUT_REQUIRED_AOI_4"
+    lon: null   # HUMAN_INPUT_REQUIRED
+    lat: null   # HUMAN_INPUT_REQUIRED
+  - name: "HUMAN_INPUT_REQUIRED_AOI_5"
+    lon: null   # HUMAN_INPUT_REQUIRED
+    lat: null   # HUMAN_INPUT_REQUIRED
+  - name: "HUMAN_INPUT_REQUIRED_AOI_6"
+    lon: null   # HUMAN_INPUT_REQUIRED
+    lat: null   # HUMAN_INPUT_REQUIRED
+  - name: "HUMAN_INPUT_REQUIRED_AOI_7"
+    lon: null   # HUMAN_INPUT_REQUIRED
+    lat: null   # HUMAN_INPUT_REQUIRED

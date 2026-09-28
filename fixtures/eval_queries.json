@@ -1,0 +1,51 @@
+[
+  {
+    "query_text": "Show me Sentinel-2 images of agriculture near Delhi from June 2024",
+    "task_type": "search",
+    "ground_truth": {
+      "relevant_scene_ids": [
+        "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+      ]
+    }
+  },
+  {
+    "query_text": "What is the land cover in this image?",
+    "task_type": "vqa",
+    "ground_truth": {
+      "answer": "The land cover is agriculture with some urban areas."
+    }
+  },
+  {
+    "query_text": "Describe the land cover around Guwahati",
+    "task_type": "caption",
+    "ground_truth": {
+      "caption": "This image shows urban areas around Guwahati with the Brahmaputra river visible."
+    }
+  },
+  {
+    "query_text": "Highlight the water body in the north east",
+    "task_type": "grounding",
+    "ground_truth": {
+      "bbox": [
+        0.3,
+        0.2,
+        0.7,
+        0.6
+      ]
+    }
+  },
+  {
+    "query_text": "What changed between August 2023 and February 2024 in the Assam region?",
+    "task_type": "change",
+    "ground_truth": {
+      "change_description": "Significant flooding detected in the Assam region between the two time periods."
+    }
+  },
+  {
+    "query_text": "Combine optical and SAR observations for the forest area",
+    "task_type": "fusion",
+    "ground_truth": {
+      "fusion_statement": "Optical shows dense forest canopy; SAR reveals forest structure and moisture content."
+    }
+  }
+]

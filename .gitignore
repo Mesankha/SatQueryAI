@@ -1,0 +1,72 @@
+# Environment files with secrets
+.env
+m1_parser/.env
+**/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+pip-wheel-metadata/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Data (large files)
+data/image_cache/
+data/scenes/
+data/catalog.db
+data/*.index
+data/*_ids.json
+
+# Replay cache
+replay_cache/
+
+# Distribution
+*.zip
+*.tar.gz
+
+# Model checkpoints
+models/*/adapter/
+models/*/checkpoint-*/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Frontend
+frontend_ui/node_modules/
+frontend_ui/dist/
+
+# IDE/Editor specific
+*.pyc
+*.pyo
+*.pyd
+.coverage
+.coverage.*
+htmlcov/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Temporary files
+*.tmp
+*.temp
+untitled.md
