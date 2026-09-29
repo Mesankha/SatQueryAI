@@ -51,6 +51,25 @@ vlm:
   service_port: 8001
   service_host: "0.0.0.0"
 
+# CROMA-S1 SAR Encoder Configuration (M3 - SAR branch)
+croma:
+  model_id: "antofuller/CROMA"
+  variant: "base"              # "base" (ViT-B, 768-dim) or "large" (ViT-L, 1024-dim)
+  device: "cuda"               # "cuda" or "cpu"
+  mock: true                   # true = mock CROMA, false = real encoder
+  checkpoint_path: "./models/croma_base.pt"
+  projector_path: "./models/croma_projector.pt"
+
+# EarthDial VLM Configuration (M3 - Optical branch + Shared Decoder)
+earthdial:
+  model_id: "hiyamdebary/EarthDial"
+  checkpoint: "EarthDial_4B_RGB"    # "EarthDial_4B_RGB", "EarthDial_4B_MS", "EarthDial_4B_Methane_UHI"
+  load_in_4bit: true
+  device: "cuda"
+  mock: true                   # true = mock EarthDial, false = real 4-bit model
+  lora_adapter_path: "./models/earthdial_lora"
+  inference_timeout: 30
+
 # Change Detection Configuration (M4)
 change:
   mock: true            # true = mock M4, false = real NDVI/log-ratio

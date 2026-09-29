@@ -3,7 +3,7 @@ ExecutionTrace builder — immutable, logged every request.
 """
 import time
 import asyncio
-from typing import Any, Callable, Awaitable
+from typing import Any, Callable, Awaitable, Optional
 
 from shared.schemas import ExecutionTrace, ToolCall, UniformError
 
@@ -11,6 +11,7 @@ from shared.schemas import ExecutionTrace, ToolCall, UniformError
 class TraceBuilder:
     def __init__(self, task_selected: str) -> None:
         self.trace = ExecutionTrace(task_selected=task_selected)
+        self._sar_path_used: Optional[str] = None
 
     def add_tool_call(self, tool_name: str, model_name: str, params: dict[str, Any], latency_ms: int, success: bool) -> None:
         self.trace.tools_called.append(
@@ -29,6 +30,23 @@ class TraceBuilder:
 
     def set_fallback_used(self, used: bool = True) -> None:
         self.trace.fallback_used = used
+
+    def set_sar_path(self, path: str) -> None:
+        """Record which SAR path was used: 'CROMA-S1 + deterministic cross-check' or 'deterministic-only fallback'"""
+        self._sar_path_used = path
+        # Also add as a tool call for auditability
+        self.trace.tools_called.append(
+            ToolCall(
+                tool_name="M3",
+                model_name=path,
+                params={"sar_path_tracking": True},
+                latency_ms=0,
+                success=True,
+            )
+        )
+
+    def get_sar_path(self) -> Optional[str]:
+        return self._sar_path_used
 
     def build(self) -> ExecutionTrace:
         return self.trace

@@ -21,6 +21,8 @@ class TaskType(str, Enum):
     grounding = "grounding"
     change = "change"
     fusion = "fusion"
+    sar_change = "sar_change"
+    sar_grounding = "sar_grounding"
 
 
 class Sensor(str, Enum):

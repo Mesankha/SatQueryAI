@@ -415,15 +415,6 @@ async def catalog_get_pair(scene_id: str):
     return paired.model_dump()
 
 
-@app.get("/gui", response_class=HTMLResponse)
-async def gui_endpoint():
-    """Serve the simple HTML GUI."""
-    gui_path = Path(__file__).parent / "static" / "index.html"
-    if gui_path.exists():
-        return HTMLResponse(content=gui_path.read_text())
-    return HTMLResponse(content="<h1>GUI not found</h1><p>Run build step to generate static files.</p>")
-
-
 @app.get("/config-status")
 async def config_status_endpoint():
     """Return current mock/real configuration status for UI."""

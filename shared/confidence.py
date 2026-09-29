@@ -2,7 +2,7 @@
 Confidence band computation for ResultItem.
 Determines High/Medium/Low confidence based on pipeline state.
 """
-from typing import Optional
+from typing import Optional, Dict, Any
 from shared.schemas import ResultItem, ExecutionTrace, SceneMetadata
 
 
@@ -12,7 +12,8 @@ def compute_band(
     trace_fallback_used: bool,
     single_observation: bool,
     cloud_cover_pct: Optional[float],
-    coregistration_ok: Optional[bool]
+    coregistration_ok: Optional[bool],
+    sar_cross_check: Optional[Dict[str, Any]] = None
 ) -> tuple[str, str]:
     """
     Compute confidence band and reason.
@@ -21,6 +22,7 @@ def compute_band(
     - low if used_fallback or trace fallback on a primary model
     - medium if single_observation or (cloud_cover_pct or 0) > 30 or coregistration is False
     - high otherwise
+    - SAR cross-check: if deterministic and model-derived SAR outputs disagree, lower confidence
     
     Returns: (band, reason)
     """
@@ -44,6 +46,15 @@ def compute_band(
     if coregistration_ok is False:
         medium_reasons.append("coregistration failed")
     
+    # SAR cross-check disagreement → medium (or low if severe)
+    if sar_cross_check:
+        disagreement = sar_cross_check.get("disagreement", False)
+        severity = sar_cross_check.get("severity", "minor")
+        if disagreement:
+            if severity == "major":
+                return "low", "Low — SAR model/deterministic disagreement (major)"
+            medium_reasons.append("SAR model/deterministic disagreement")
+    
     if medium_reasons:
         return "medium", "Medium — " + "; ".join(medium_reasons)
     
@@ -55,7 +66,8 @@ def attach_confidence(
     result: ResultItem,
     scene: SceneMetadata,
     query_used_fallback: bool,
-    trace: ExecutionTrace
+    trace: ExecutionTrace,
+    sar_cross_check: Optional[Dict[str, Any]] = None
 ) -> None:
     """
     Attach confidence band and reason to ResultItem.
@@ -75,7 +87,8 @@ def attach_confidence(
         trace_fallback_used=trace.fallback_used,
         single_observation=single_obs,
         cloud_cover_pct=cloud_cover,
-        coregistration_ok=coreg_ok
+        coregistration_ok=coreg_ok,
+        sar_cross_check=sar_cross_check
     )
     
     result.confidence_band = band

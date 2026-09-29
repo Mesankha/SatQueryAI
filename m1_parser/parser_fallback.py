@@ -21,6 +21,8 @@ TASK_KEYWORDS = {
                        "highlight", "where is", "locate", "show me the", "find the", "point to"],
     TaskType.change: ["changed", "before and after", "increased", "decreased", "difference between", "what changed"],
     TaskType.fusion: ["both", "optical and sar", "combine", "fusion", "multimodal", "sar and optical"],
+    TaskType.sar_change: ["sar change", "radar change", "sar difference", "radar difference"],
+    TaskType.sar_grounding: ["ground on sar", "locate on sar", "find on sar", "highlight on sar"],
 }
 
 SENSOR_KEYWORDS = {
@@ -36,7 +38,11 @@ def _infer_task_type(text: str) -> TaskType:
         for kw in keywords:
             if kw in text_lower:
                 scores[task] += 1
-    # Fusion and change are strong signals; default to search
+    # Priority order: specific SAR tasks > fusion > change > vqa > caption > search
+    if scores[TaskType.sar_grounding] > 0:
+        return TaskType.sar_grounding
+    if scores[TaskType.sar_change] > 0:
+        return TaskType.sar_change
     if scores[TaskType.fusion] > 0:
         return TaskType.fusion
     if scores[TaskType.change] > 0:

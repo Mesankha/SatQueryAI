@@ -21,14 +21,21 @@ class TestDispatchMatrix:
 
     @pytest.mark.asyncio
     async def test_sar_query_no_vlm_call(self):
-        """SAR-only query should not call VLM on SAR file."""
-        with patch('m5_controller.dispatch_table._call_m3_caption', new_callable=AsyncMock) as mock_caption:
-            mock_caption.return_value = "Optical caption"
+        """Fusion query: optical goes to EarthDial, SAR goes to deterministic cross-check.
+        
+        This test verifies the NEW architecture (with CROMA-S1):
+        - Optical image -> EarthDial VLM (or mock)
+        - SAR image -> deterministic features (always runs as cross-check)
+        - When NOT in mock mode: SAR also goes through CROMA encoder + shared decoder
+        - In mock mode: CROMA path is skipped, only deterministic runs
+        """
+        with patch('m5_controller.dispatch_table._call_earthdial_caption', new_callable=AsyncMock) as mock_optical_caption:
+            mock_optical_caption.return_value = "Optical caption from EarthDial"
             
             with patch('m5_controller.dispatch_table._m2_retrieve') as mock_retrieve:
                 from shared.schemas import SceneMetadata
                 from datetime import datetime, timezone
-                
+    
                 optical_scene = SceneMetadata(
                     scene_id="opt-1",
                     sensor="Sentinel-2",
@@ -47,7 +54,7 @@ class TestDispatchMatrix:
                 )
                 mock_retrieve.return_value = [optical_scene, sar_scene]
                 
-                # Mock SAR features
+                # Mock SAR features (deterministic cross-check)
                 with patch('m5_controller.dispatch_table._call_m4_sar_features', new_callable=AsyncMock) as mock_sar:
                     mock_sar.return_value = {
                         "water_fraction": 0.1,
@@ -71,10 +78,20 @@ class TestDispatchMatrix:
                         builder = TraceBuilder(task_selected="fusion")
                         results = await pipeline_fusion(query, builder)
                         
-                        # Verify caption was called only once (on optical)
-                        assert mock_caption.call_count == 1
-                        called_path = mock_caption.call_args[0][0]
-                        assert called_path == "/fake/optical.tif", f"VLM called on wrong file: {called_path}"
+                        # Verify optical caption was called on optical image
+                        assert mock_optical_caption.call_count == 1
+                        called_path = mock_optical_caption.call_args[0][0]
+                        assert called_path == "/fake/optical.tif", f"EarthDial called on wrong file: {called_path}"
+                        
+                        # Verify deterministic SAR features ran as cross-check
+                        assert mock_sar.call_count == 1
+                        called_path = mock_sar.call_args[0][0]
+                        assert called_path == "/fake/sar.tif", f"Deterministic SAR features called on wrong file: {called_path}"
+                        
+                        # Verify trace records both paths
+                        tool_names = [t.tool_name for t in builder.trace.tools_called]
+                        assert "M3" in tool_names
+                        assert "M4" in tool_names
 
     @pytest.mark.asyncio
     async def test_parser_timeout_fallback(self):

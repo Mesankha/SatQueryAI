@@ -62,6 +62,29 @@ class ChangeConfig(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="CHANGE_")
 
 
+class CROMAConfig(BaseSettings):
+    model_id: str = "antofuller/CROMA"
+    variant: str = "base"  # "base" or "large"
+    device: str = "cuda"
+    mock: bool = True
+    checkpoint_path: str = "./models/croma_base.pt"
+    projector_path: str = "./models/croma_projector.pt"
+
+    model_config = SettingsConfigDict(env_prefix="CROMA_")
+
+
+class EarthDialConfig(BaseSettings):
+    model_id: str = "hiyamdebary/EarthDial"
+    checkpoint: str = "EarthDial_4B_RGB"
+    load_in_4bit: bool = True
+    device: str = "cuda"
+    mock: bool = True
+    lora_adapter_path: str = "./models/earthdial_lora"
+    inference_timeout: int = 30
+
+    model_config = SettingsConfigDict(env_prefix="EARTHDIAL_")
+
+
 class APIConfig(BaseSettings):
     host: str = "0.0.0.0"
     port: int = 8000
@@ -91,6 +114,8 @@ class Settings(BaseSettings):
     parser: ParserConfig = Field(default_factory=ParserConfig)
     retrieval: RetrievalConfig = Field(default_factory=RetrievalConfig)
     vlm: VLMConfig = Field(default_factory=VLMConfig)
+    croma: CROMAConfig = Field(default_factory=CROMAConfig)
+    earthdial: EarthDialConfig = Field(default_factory=EarthDialConfig)
     change: ChangeConfig = Field(default_factory=ChangeConfig)
     api: APIConfig = Field(default_factory=APIConfig)
     session: SessionConfig = Field(default_factory=SessionConfig)
@@ -129,6 +154,8 @@ def get_config_dict() -> Dict[str, Any]:
         "parser": s.parser.model_dump(),
         "retrieval": s.retrieval.model_dump(),
         "vlm": s.vlm.model_dump(),
+        "croma": s.croma.model_dump(),
+        "earthdial": s.earthdial.model_dump(),
         "change": s.change.model_dump(),
         "api": s.api.model_dump(),
         "session": s.session.model_dump(),
