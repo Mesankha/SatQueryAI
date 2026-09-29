@@ -4,19 +4,20 @@ Agentic remote-sensing vision-language assistant — natural-language and
 direct-image-upload analysis of satellite imagery (optical, SAR, and
 optical+SAR pairs), built for SIH 2026 Problem Statement 167.
 
-> **Status:** Working prototype, demo-scope. See [STATUS.md](STATUS.md) for
+> **Status:** Working prototype, demo-scope. See [docs/STATUS.md](docs/STATUS.md) for
 > exactly what's real vs. mocked, and why. See [docs/MODELS.md](docs/MODELS.md)
-> for model dependencies.
+> for model dependencies. See [docs/SatQuery_AI_Unified_Architecture_v3.md](docs/SatQuery_AI_Unified_Architecture_v3.md)
+> for full architecture and claims discipline.
 
 ## What it does
 
-- Natural-language query → structured intent → routed to the right specialist
-  pipeline (search, VQA, captioning, change detection, or optical–SAR fusion)
-- Direct image/image-pair upload with compatibility checking
-- Deterministic, auditable SAR analysis (no hallucination risk on a modality
-  with no available pretrained VLM checkpoint)
-- Every response includes a structured execution trace, confidence band, and
-  data-freshness statement
+- **Natural-language query** → structured intent → routed to the right specialist
+  pipeline (search, VQA, captioning, change detection, optical–SAR fusion, SAR change, SAR grounding)
+- **Direct image/image-pair upload** with compatibility checking (CRS, footprint, bands)
+- **SAR branch with dual path**: CROMA-S1 (radar-native ViT encoder) → projector → shared Qwen decoder for narratives + **deterministic cross-check** (log-ratio, water/built-up fractions) running in parallel. Disagreement surfaces, confidence drops.
+- **Optical branch**: EarthDial (InternViT + Qwen) with LoRA fine-tuning support
+- **Fusion**: Cross-attention fusion of EarthDial optical tokens + CROMA SAR tokens → shared decoder
+- **Every response** includes: structured execution trace, confidence band (High/Med/Low + reason), data-freshness statement, SAR path tracking
 
 ## Quickstart
 
@@ -25,51 +26,122 @@ git clone <repo>
 cd satquery
 python -m venv venv
 source venv/bin/activate  # or venv\Scripts\activate on Windows
-pip install -r requirements-lock.txt   # exact versions used for testing
+pip install -r requirements.txt
 python -m api.main
-# → http://localhost:8000/gui
+# → API at http://localhost:8000
+#   GET /health, /config-status, /catalog, /catalog/search
 ```
 
-This runs the full pipeline against fixture data out of the box — no GPU or
-API keys required for the demo path. See STATUS.md for what changes when real
-models/data are enabled.
+This runs the full pipeline against **synthetic fixture data** out of the box — no GPU or
+API keys required for the demo path (all models in `mock: true` mode). See docs/STATUS.md for what
+changes when real models/data are enabled.
+
+## Frontend (React + Vite)
+
+```bash
+cd frontend_ui
+npm install
+npm run dev   # http://localhost:5173
+npm run build # production build to dist/
+```
+
+The React frontend (`frontend_ui/`) provides the interactive UI. The legacy simple HTML GUI (`/gui` endpoint) has been removed.
 
 ## Architecture
 
 | Module | Purpose | Key Files |
 |---|---|---|
-| M0 Catalog | Scene metadata storage (SQLite), image caching, multi-source ingestion | `m0_catalog/`, `m0_ingest/` |
-| M1 Parser | NL query → `StructuredQuery`; LLM-primary with regex/keyword fallback | `m1_parser/` |
-| M2 Retrieval | **Three-stage real pipeline**: SQL metadata filter → text similarity (sentence-transformers + FAISS) → multi-factor score fusion | `m2_retrieval/` |
-| M3 VLM | GeoChat 4-bit VLM: caption, VQA; lazy loading, mock-gated | `m3_vlm/` |
-| M4 Change | Deterministic SAR feature extraction, optical/SAR change detection | `m4_change/`, `m4_changedetect/` |
-| M5 Controller | Agentic dispatch: 5 pipelines, trace building, confidence bands | `m5_controller/` |
-| M6 API | FastAPI server: POST /query, POST /upload, GET /gui; replay cache | `api/`, `m6_api/` |
+| **M0 Catalog** | Scene metadata storage (SQLite + FAISS), multi-source ingestion, synthetic test data generator | `m0_catalog/`, `m0_catalog/populate_synthetic.py` |
+| **M1 Parser** | NL query → `StructuredQuery`; deterministic regex/keyword fallback (primary), Phi-4-mini LoRA (real) | `m1_parser/` |
+| **M2 Retrieval** | **Three-stage real pipeline**: SQL metadata filter → text similarity (sentence-transformers + FAISS) → multi-factor score fusion | `m2_retrieval/` |
+| **M3 VLM** | **Optical**: EarthDial `EarthDial_4B_RGB` (InternViT + Qwen). **SAR**: CROMA-S1 (ViT-Base/Large) → projector → shared decoder. **Fusion**: Cross-attention dual-encoder → shared Qwen decoder | `m3_vlm/earthdial_loader.py`, `m3_vlm/croma_loader.py`, `m3_vlm/fusion_decoder.py`, `m3_vlm/projector.py` |
+| **M4 Change** | Deterministic change detection (NDVI/NDWI delta, SAR log-ratio). SAR Siamese (CROMA) placeholder | `m4_change/` |
+| **M5 Controller** | Agentic dispatch: **7 pipelines** (search, vqa, caption, change, fusion, sar_change, sar_grounding), trace building, confidence bands with SAR cross-check, SAR path tracking | `m5_controller/` |
+| **M6 API** | FastAPI server: POST /query, POST /upload, GET /report, GET /catalog, GET /config-status; replay cache | `api/` |
+
+### Model Stack
+
+| Component | Model | Source | Size | Mock Default |
+|---|---|---|---|---|
+| Query Parser (real) | Phi-4-mini-instruct | `microsoft/Phi-4-mini-instruct` | ~7.5GB (fp16) / ~2GB (4-bit) | ✅ Regex fallback |
+| VLM Optical (real) | EarthDial `EarthDial_4B_RGB` | `hiyamdebary/EarthDial` | Multi-GB | ✅ Mock responses |
+| SAR Encoder (real) | CROMA-S1 ViT-Base | `antofuller/CROMA` | ~350MB | ✅ Mock CROMA |
+| Retrieval Embeddings | sentence-transformers/all-MiniLM-L6-v2 | PyPI / HF | ~80MB | **Real (CPU)** |
+
+## Key Architecture Decisions (from Unified Architecture v3)
+
+1. **SAR never hallucinates**: CROMA-S1 is a radar-native encoder (pretrained on 1M Sentinel-1/2 pairs). Deterministic SAR math (log-ratio, water/built-up fractions) is the **permanent cross-check** — not a stepping stone.
+2. **Disagreement surfaced**: When model output ≠ deterministic math → confidence drops, both shown, never silently resolved.
+3. **SAR grounding = optical-guided fallback**: SAREval <3% Acc@0.5 for native SAR grounding. Ground on co-registered optical, project box to SAR.
+4. **Claims discipline**: No "zero hallucination" on SAR (learned encoder now in loop). No "general India-wide" claims — state exact AOI count/zones. No mock metrics as real.
 
 ## Testing
 
 ```bash
 pytest -q
 ```
-**232 passed, 2 skipped** (as of 2026-09-27)
+**59 passed** (as of 2026-09-29)
 
-## Problem statement mapping
+```bash
+# Backend modules
+pytest m0_catalog/test_catalog.py m3_vlm/test_croma.py m3_vlm/test_earthdial.py m5_controller/test_dispatch_matrix.py m5_controller/test_controller.py -v
+
+# Frontend
+cd frontend_ui && npm run lint
+```
+
+## Evaluation
+
+```bash
+# Retrieval evaluation (requires sentence-transformers model download on first run)
+python -m evals.run_retrieval_eval --db ./data/catalog.db --splits ./data/eval_splits.json --tag baseline_202609
+```
+
+**Baseline metrics** (64 synthetic scenes, 2 held-out AOIs):
+- Recall@5: 33.3%
+- Precision@5: 36.3%
+- mAP@5: 23.9%
+- Latency p50: 142ms, p95: 5376ms
+
+## Problem Statement 167 Mapping
 
 | PS167 Requirement | Module | Status | Notes |
 |---|---|---|---|
-| Remote-sensing adaptation (BigEarthNet) | M3 VLM / M0 | Mocked | Training harness exists; no checkpoint produced |
-| Single-image VQA (mandatory) | M3 VLM / M5 | Mocked | `pipeline_vqa` → mock HTTP client |
-| Captioning (additional single-image) | M3 VLM / M5 | Mocked | `pipeline_caption` → mock HTTP client |
-| Multitemporal change description | M4 Change / M5 | Real (deterministic) | NDVI/NDWI/SAR log-ratio, 97 unit tests |
-| Cross-modal optical+SAR analysis | M3+M4 / M5 | Mocked+Real | Optical→VLM, SAR→deterministic features |
-| Agentic orchestration | M5 Controller | Real | 6 pipelines, full trace, confidence bands |
-| Input validation & compatibility | M5 Controller | Real | CRS, footprint, band checks |
-| Structured execution trace | M5 Controller | Real | `ExecutionTrace` on every response |
-| Confidence estimation | M5 Controller | Real | High/Med/Low bands on every result |
-| Downloadable report | M6 API | **Missing** | Not yet implemented |
-| Interactive GUI/web app | M6 API | Real | `api/static/index.html` at `GET /gui` |
-| GeoTIFF/TIFF handling | M0, M3, M4 | Real | `rasterio`-based throughout |
-| **Three-stage retrieval (SQL → text sim → fusion)** | **M2 Retrieval** | **Real (fixture data)** | **sentence-transformers + FAISS, 27 scenes** |
+| Remote-sensing adaptation (BigEarthNet.txt) | M3 VLM / M0 | Mocked | Training harness exists; no checkpoint produced |
+| Single-image VQA (mandatory) | M3 VLM / M5 | Mocked | `pipeline_vqa` → EarthDial-optical (mock) / CROMA-SAR (mock) |
+| Captioning (additional single-image) | M3 VLM / M5 | Mocked | `pipeline_caption` → EarthDial-optical / CROMA-SAR |
+| Multitemporal change description | M4 Change / M5 | **Real (deterministic)** | NDVI/NDWI delta, SAR log-ratio, verified |
+| Cross-modal optical+SAR analysis | M3+M4 / M5 | **Upgraded** | Optical→EarthDial, SAR→CROMA-S1+deterministic cross-check |
+| SAR change detection | M3+M4 / M5 | **Partial (deterministic)** | CROMA Siamese placeholder, deterministic log-ratio active |
+| SAR grounding | M5 Controller | **Optical-guided fallback** | SAREval <3% Acc@0.5 cited, optical→project box |
+| Agentic orchestration | M5 Controller | **Real** | 7 pipelines, full trace, confidence bands |
+| Input validation & compatibility | M5 Controller | **Real** | CRS, footprint, band checks |
+| Structured execution trace | M5 Controller | **Real** | `ExecutionTrace` on every response, SAR path named |
+| Confidence estimation | M5 Controller | **Real** | High/Med/Low bands, SAR cross-check lowers confidence |
+| Downloadable report | M6 API | **Real** | GET /report?query_id=...&format=json |
+| Interactive GUI/web app | Frontend (React) | **Real** | `frontend_ui/` at `npm run dev` |
+| GeoTIFF/TIFF handling | M0, M3, M4 | **Real** | `rasterio`-based throughout, 120×120 CROMA constraint |
+| Three-stage retrieval (SQL → text sim → fusion) | M2 Retrieval | **Real (64 scenes)** | sentence-transformers + FAISS |
+
+## To Enable Real Inference
+
+1. Install GPU extras: `pip install torch bitsandbytes accelerate`
+2. Set `mock: false` in `config.yaml`:
+   ```yaml
+   vlm:
+     mock: false
+   croma:
+     mock: false
+   retrieval:
+     mock: false
+   ```
+3. First run downloads checkpoints via `transformers`/`huggingface_hub` (requires network + disk space)
+
+## External Dependencies
+
+- **Bhoonidhi** (`bhoonidhi.nrsc.gov.in`): ISRO/NRSC data access for Cartosat-2S/RISAT samples — required for real RISAT validation of CROMA 2-channel constraint
+- **BigEarthNet.txt** (464K pairs, 9.6M annotations): Primary fine-tuning corpus for EarthDial + CROMA projector
+- **VRSBench / RSVQA / CDVQA**: Evaluation benchmarks
 
 ## License
 
