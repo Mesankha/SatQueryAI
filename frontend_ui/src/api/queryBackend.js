@@ -26,12 +26,13 @@ async function request(endpoint, options = {}) {
  * Natural language query
  * @param {string} queryText - User query
  * @param {string} [imageId] - Optional scene ID
+ * @param {object} [aoi_override] - Optional AOI override
  * @returns {Promise<QueryResponse>}
  */
-export async function queryBackend(queryText, imageId = null) {
+export async function queryBackend(queryText, imageId = null, aoi_override = null) {
   return request('/query', {
     method: 'POST',
-    body: JSON.stringify({ query_text: queryText, image_id: imageId }),
+    body: JSON.stringify({ query_text: queryText, image_id: imageId, aoi_override }),
   });
 }
 
@@ -99,6 +100,33 @@ export async function configStatusBackend() {
 }
 
 /**
+ * Catalog endpoints
+ */
+export async function catalogListBackend(params = {}) {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([k, v]) => { if (v !== undefined && v !== null) searchParams.append(k, v); });
+  const res = await fetch(`${API_BASE}/catalog?${searchParams}`);
+  return res.json();
+}
+
+export async function catalogSearchBackend(params) {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([k, v]) => { if (v !== undefined && v !== null) searchParams.append(k, v); });
+  const res = await fetch(`${API_BASE}/catalog/search?${searchParams}`);
+  return res.json();
+}
+
+export async function catalogGetSceneBackend(sceneId) {
+  const res = await fetch(`${API_BASE}/catalog/${sceneId}`);
+  return res.json();
+}
+
+export async function catalogGetPairBackend(sceneId) {
+  const res = await fetch(`${API_BASE}/catalog/${sceneId}/pair`);
+  return res.json();
+}
+
+/**
  * TypeScript-like type definitions for reference
  */
 /*
@@ -137,6 +165,7 @@ export interface ModelOutputs {
   sar_caption?: string;
   sar_vqa_answer?: string;
   optical_caption?: string;
+  sar_cross_check?: SarCrossCheck;
 }
 
 export interface SarFeatures {
@@ -144,6 +173,15 @@ export interface SarFeatures {
   builtup_fraction: number;
   log_ratio_mean: number;
   notes?: string;
+}
+
+export interface SarCrossCheck {
+  disagreement: boolean;
+  severity: 'minor' | 'major';
+  details: string;
+  water_fraction: number;
+  builtup_fraction: number;
+  log_ratio_mean: number;
 }
 
 export interface ExecutionTrace {
