@@ -1,0 +1,258 @@
+{
+  "S2_west bengal_fusion_03": {
+    "split": "test",
+    "aoi": "west bengal"
+  },
+  "S1_west bengal_fusion_03": {
+    "split": "test",
+    "aoi": "west bengal"
+  },
+  "s1_west bengal_barren_13_01_eea9641f": {
+    "split": "test",
+    "aoi": "west bengal"
+  },
+  "s2_west bengal_forest_13_00_669d922f": {
+    "split": "test",
+    "aoi": "west bengal"
+  },
+  "s1_west bengal_built-up_13_00_28b6b801": {
+    "split": "test",
+    "aoi": "west bengal"
+  },
+  "s2_west bengal_cropland_13_01_8ed2ee2f": {
+    "split": "test",
+    "aoi": "west bengal"
+  },
+  "S1_rajasthan_fusion_02": {
+    "split": "test",
+    "aoi": "rajasthan"
+  },
+  "S2_rajasthan_fusion_02": {
+    "split": "test",
+    "aoi": "rajasthan"
+  },
+  "s1_rajasthan_forest_12_01_cbce0b89": {
+    "split": "test",
+    "aoi": "rajasthan"
+  },
+  "s2_rajasthan_residential_12_00_4216bfc9": {
+    "split": "test",
+    "aoi": "rajasthan"
+  },
+  "s1_rajasthan_agriculture_12_00_1a5823a4": {
+    "split": "test",
+    "aoi": "rajasthan"
+  },
+  "s2_rajasthan_grassland_12_01_79f36f3d": {
+    "split": "test",
+    "aoi": "rajasthan"
+  },
+  "S1_assam_fusion_00": {
+    "split": "train",
+    "aoi": "assam"
+  },
+  "S2_assam_fusion_00": {
+    "split": "train",
+    "aoi": "assam"
+  },
+  "s2_assam_cropland_10_01_2a4bc49e": {
+    "split": "train",
+    "aoi": "assam"
+  },
+  "s1_assam_wetland_10_00_6ccbf342": {
+    "split": "train",
+    "aoi": "assam"
+  },
+  "s1_assam_cropland_10_01_0bb21858": {
+    "split": "train",
+    "aoi": "assam"
+  },
+  "s2_assam_agriculture_10_00_6776c748": {
+    "split": "train",
+    "aoi": "assam"
+  },
+  "S1_kerala_fusion_01": {
+    "split": "train",
+    "aoi": "kerala"
+  },
+  "S2_kerala_fusion_01": {
+    "split": "train",
+    "aoi": "kerala"
+  },
+  "s2_kerala_water_11_01_6075016a": {
+    "split": "train",
+    "aoi": "kerala"
+  },
+  "s1_kerala_grassland_11_00_38a23592": {
+    "split": "train",
+    "aoi": "kerala"
+  },
+  "s2_kerala_grassland_11_00_4b466ba7": {
+    "split": "train",
+    "aoi": "kerala"
+  },
+  "s1_kerala_water_11_01_47dd75a6": {
+    "split": "train",
+    "aoi": "kerala"
+  },
+  "s2_lucknow_water_09_00_205996ba": {
+    "split": "train",
+    "aoi": "lucknow"
+  },
+  "s1_lucknow_urban_09_00_984508af": {
+    "split": "train",
+    "aoi": "lucknow"
+  },
+  "s2_lucknow_urban_09_01_73263380": {
+    "split": "train",
+    "aoi": "lucknow"
+  },
+  "s1_lucknow_built-up_09_01_9963ff28": {
+    "split": "train",
+    "aoi": "lucknow"
+  },
+  "s1_delhi_grassland_00_01_884bd4b9": {
+    "split": "train",
+    "aoi": "delhi"
+  },
+  "s2_delhi_agriculture_00_00_e1fb5d5d": {
+    "split": "train",
+    "aoi": "delhi"
+  },
+  "s1_delhi_barren_00_00_a8c984dc": {
+    "split": "train",
+    "aoi": "delhi"
+  },
+  "s2_delhi_cropland_00_01_988ad3c6": {
+    "split": "train",
+    "aoi": "delhi"
+  },
+  "s1_bangalore_water_02_01_b0e320fc": {
+    "split": "train",
+    "aoi": "bangalore"
+  },
+  "s2_bangalore_barren_02_00_a362aa51": {
+    "split": "train",
+    "aoi": "bangalore"
+  },
+  "s2_bangalore_forest_02_01_f2aa936e": {
+    "split": "train",
+    "aoi": "bangalore"
+  },
+  "s1_bangalore_urban_02_00_5fff490b": {
+    "split": "train",
+    "aoi": "bangalore"
+  },
+  "s1_pune_residential_06_00_8f574dc9": {
+    "split": "train",
+    "aoi": "pune"
+  },
+  "s2_pune_residential_06_01_f92b4d43": {
+    "split": "train",
+    "aoi": "pune"
+  },
+  "s2_pune_grassland_06_00_c91940c3": {
+    "split": "train",
+    "aoi": "pune"
+  },
+  "s1_pune_cropland_06_01_86ac5bf2": {
+    "split": "train",
+    "aoi": "pune"
+  },
+  "s2_ahmedabad_barren_07_01_5a9a8710": {
+    "split": "train",
+    "aoi": "ahmedabad"
+  },
+  "s1_ahmedabad_built-up_07_01_131803c8": {
+    "split": "train",
+    "aoi": "ahmedabad"
+  },
+  "s1_ahmedabad_cropland_07_00_f20c597d": {
+    "split": "train",
+    "aoi": "ahmedabad"
+  },
+  "s2_ahmedabad_urban_07_00_13894820": {
+    "split": "train",
+    "aoi": "ahmedabad"
+  },
+  "s2_jaipur_cropland_08_00_66605442": {
+    "split": "train",
+    "aoi": "jaipur"
+  },
+  "s1_jaipur_built-up_08_01_67061999": {
+    "split": "train",
+    "aoi": "jaipur"
+  },
+  "s1_jaipur_urban_08_00_b6b138a7": {
+    "split": "train",
+    "aoi": "jaipur"
+  },
+  "s2_jaipur_barren_08_01_18194b90": {
+    "split": "train",
+    "aoi": "jaipur"
+  },
+  "s2_mumbai_agriculture_01_01_bf833f76": {
+    "split": "train",
+    "aoi": "mumbai"
+  },
+  "s1_mumbai_urban_01_01_9f62f13d": {
+    "split": "train",
+    "aoi": "mumbai"
+  },
+  "s2_mumbai_agriculture_01_00_4d75ca13": {
+    "split": "train",
+    "aoi": "mumbai"
+  },
+  "s1_mumbai_forest_01_00_dbf2f270": {
+    "split": "train",
+    "aoi": "mumbai"
+  },
+  "s1_hyderabad_residential_05_01_51a816b2": {
+    "split": "train",
+    "aoi": "hyderabad"
+  },
+  "s2_hyderabad_built-up_05_00_489673c9": {
+    "split": "train",
+    "aoi": "hyderabad"
+  },
+  "s1_hyderabad_wetland_05_00_06ebc9c5": {
+    "split": "train",
+    "aoi": "hyderabad"
+  },
+  "s2_hyderabad_barren_05_01_6ce5a4de": {
+    "split": "train",
+    "aoi": "hyderabad"
+  },
+  "s2_chennai_water_03_01_ff5dc9ac": {
+    "split": "train",
+    "aoi": "chennai"
+  },
+  "s1_chennai_urban_03_01_b3b0c876": {
+    "split": "train",
+    "aoi": "chennai"
+  },
+  "s2_chennai_urban_03_00_280eb007": {
+    "split": "train",
+    "aoi": "chennai"
+  },
+  "s1_chennai_agriculture_03_00_1029aa55": {
+    "split": "train",
+    "aoi": "chennai"
+  },
+  "s2_kolkata_water_04_01_d254ae6e": {
+    "split": "train",
+    "aoi": "kolkata"
+  },
+  "s1_kolkata_built-up_04_01_a59c194b": {
+    "split": "train",
+    "aoi": "kolkata"
+  },
+  "s2_kolkata_cropland_04_00_cc449a95": {
+    "split": "train",
+    "aoi": "kolkata"
+  },
+  "s1_kolkata_residential_04_00_83354400": {
+    "split": "train",
+    "aoi": "kolkata"
+  }
+}

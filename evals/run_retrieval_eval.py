@@ -77,6 +77,10 @@ def load_eval_splits(splits_path: str) -> dict[str, Any]:
         raise FileNotFoundError(f"Eval splits file not found: {splits_path}")
     with open(splits_path) as f:
         return json.load(f)
+
+
+def load_catalog(db_path: str) -> list[dict[str, Any]]:
+    """Load catalog scenes from database."""
     import sqlite3
     if not Path(db_path).exists():
         raise FileNotFoundError(f"Catalog database not found: {db_path}")
@@ -90,10 +94,10 @@ def load_eval_splits(splits_path: str) -> dict[str, Any]:
     return [dict(row) for row in rows]
 
 
-def generate_test_queries(splits: dict[str, Any], catalog: list[dict[str, Any]]) -> list[StructuredQuery]:
+def generate_test_queries(splits: dict[str, Any], catalog: list[dict[str, Any]]) -> list[tuple[StructuredQuery, str]]:
     """
     Generate test queries from held-out AOI scenes.
-    For each test-AOI scene, create a query using its object/location.
+    Returns list of (query, source_scene_id) tuples.
     """
     # Group test scenes by AOI
     test_scenes = [s for s in catalog if splits.get(s["scene_id"], {}).get("split") == "test"]
@@ -125,7 +129,7 @@ def generate_test_queries(splits: dict[str, Any], catalog: list[dict[str, Any]])
             start_date=datetime.fromisoformat(scene["acquisition_time"].replace("Z", "+00:00")) if scene.get("acquisition_time") else None,
             end_date=None,
         )
-        queries.append(query)
+        queries.append((query, scene["scene_id"]))
 
     return queries
 
@@ -196,23 +200,19 @@ def run_evaluation(
         sensor = scene["sensor"]
         gt_by_aoi_sensor[(aoi, sensor)].append(scene["scene_id"])
 
-    queries = generate_test_queries(splits, catalog)
-    if not queries:
+    queries_with_ids = generate_test_queries(splits, catalog)
+    if not queries_with_ids:
         return {"error": "No queries generated"}
 
     all_metrics = []
     all_latencies = []
     all_cosine_sims = []
 
-    for query in queries:
-        # Determine ground truth for this query
-        aoi = None
-        for scene in catalog:
-            if scene.get("object") == query.object and scene.get("sensor") == query.sensor.value:
-                aoi = splits.get(scene["scene_id"], {}).get("aoi")
-                break
-
-        relevant = gt_by_aoi_sensor.get((aoi, query.sensor.value), []) if aoi else []
+    for query, source_scene_id in queries_with_ids:
+        # Get ground truth directly from source scene's AOI
+        aoi = splits[source_scene_id]["aoi"]
+        sensor = query.sensor.value
+        relevant = gt_by_aoi_sensor.get((aoi, sensor), [])
 
         # Run retrieval with timing
         start = time.perf_counter()
@@ -259,7 +259,7 @@ def run_evaluation(
             "p95": float(p95_latency),
             "mean": float(np.mean(all_latencies)) if all_latencies else 0.0,
         },
-        "num_queries": len(queries),
+        "num_queries": len(queries_with_ids),
         "num_test_scenes": len(test_scenes),
     }
 
