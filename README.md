@@ -2,7 +2,7 @@
 
 Agentic remote-sensing vision-language assistant — natural-language and
 direct-image-upload analysis of satellite imagery (optical, SAR, and
-optical+SAR pairs), built for SIH 2026 Problem Statement 167.
+optical+SAR pairs)
 
 > **Status:** Working prototype, demo-scope. See [docs/STATUS.md](docs/STATUS.md) for
 > exactly what's real vs. mocked, and why. See [docs/MODELS.md](docs/MODELS.md)
@@ -12,10 +12,10 @@ optical+SAR pairs), built for SIH 2026 Problem Statement 167.
 ## What it does
 
 - **Natural-language query** → structured intent → routed to the right specialist
-  pipeline (search, VQA, captioning, change detection, optical–SAR fusion, SAR change, SAR grounding)
+  pipeline (Retrieve/search, VQA, captioning, change detection, optical–SAR fusion, SAR change, SAR grounding)
 - **Direct image/image-pair upload** with compatibility checking (CRS, footprint, bands)
-- **SAR branch with dual path**: CROMA-S1 (radar-native ViT encoder) → projector → shared Qwen decoder for narratives + **deterministic cross-check** (log-ratio, water/built-up fractions) running in parallel. Disagreement surfaces, confidence drops.
-- **Optical branch**: EarthDial (InternViT + Qwen) with LoRA fine-tuning support
+- **SAR branch with dual path**: CROMA-S1 (radar-native ViT encoder) → projector → shared phi-3 decoder for narratives + **deterministic cross-check** (log-ratio, water/built-up fractions) running in parallel. Disagreement surfaces, confidence drops.
+- **Optical branch**: EarthDial (InternViT + Phi-3 mini) with LoRA fine-tuning support
 - **Fusion**: Cross-attention fusion of EarthDial optical tokens + CROMA SAR tokens → shared decoder
 - **Every response** includes: structured execution trace, confidence band (High/Med/Low + reason), data-freshness statement, SAR path tracking
 
@@ -45,7 +45,7 @@ npm run dev   # http://localhost:5173
 npm run build # production build to dist/
 ```
 
-The React frontend (`frontend_ui/`) provides the interactive UI. The legacy simple HTML GUI (`/gui` endpoint) has been removed.
+The React frontend (`frontend_ui/`) provides the interactive UI.
 
 ## Architecture
 
@@ -54,8 +54,8 @@ The React frontend (`frontend_ui/`) provides the interactive UI. The legacy simp
 | **M0 Catalog** | Scene metadata storage (SQLite + FAISS), multi-source ingestion, synthetic test data generator | `m0_catalog/`, `m0_catalog/populate_synthetic.py` |
 | **M1 Parser** | NL query → `StructuredQuery`; deterministic regex/keyword fallback (primary), Phi-4-mini LoRA (real) | `m1_parser/` |
 | **M2 Retrieval** | **Three-stage real pipeline**: SQL metadata filter → text similarity (sentence-transformers + FAISS) → multi-factor score fusion | `m2_retrieval/` |
-| **M3 VLM** | **Optical**: EarthDial `EarthDial_4B_RGB` (InternViT + Qwen). **SAR**: CROMA-S1 (ViT-Base/Large) → projector → shared decoder. **Fusion**: Cross-attention dual-encoder → shared Qwen decoder | `m3_vlm/earthdial_loader.py`, `m3_vlm/croma_loader.py`, `m3_vlm/fusion_decoder.py`, `m3_vlm/projector.py` |
-| **M4 Change** | Deterministic change detection (NDVI/NDWI delta, SAR log-ratio). SAR Siamese (CROMA) placeholder | `m4_change/` |
+| **M3 VLM** | **Optical**: EarthDial `EarthDial_4B_RGB` (InternViT + Phi-3 mini). **SAR**: CROMA-S1 (ViT-Base/Large) → projector → shared decoder. **Fusion**: Cross-attention dual-encoder → shared phi-3 mini decoder | `m3_vlm/earthdial_loader.py`, `m3_vlm/croma_loader.py`, `m3_vlm/fusion_decoder.py`, `m3_vlm/projector.py` |
+| **M4 Change** | direct vlm change detection based on modality(sar/optical) ,Deterministic change detection (NDVI/NDWI delta, SAR log-ratio) to cross verify the results. SAR Siamese (CROMA) placeholder | `m4_change/` |
 | **M5 Controller** | Agentic dispatch: **7 pipelines** (search, vqa, caption, change, fusion, sar_change, sar_grounding), trace building, confidence bands with SAR cross-check, SAR path tracking | `m5_controller/` |
 | **M6 API** | FastAPI server: POST /query, POST /upload, GET /report, GET /catalog, GET /config-status; replay cache | `api/` |
 
@@ -102,26 +102,6 @@ python -m evals.run_retrieval_eval --db ./data/catalog.db --splits ./data/eval_s
 - Precision@5: 36.3%
 - mAP@5: 23.9%
 - Latency p50: 142ms, p95: 5376ms
-
-## Problem Statement 167 Mapping
-
-| PS167 Requirement | Module | Status | Notes |
-|---|---|---|---|
-| Remote-sensing adaptation (BigEarthNet.txt) | M3 VLM / M0 | Mocked | Training harness exists; no checkpoint produced |
-| Single-image VQA (mandatory) | M3 VLM / M5 | Mocked | `pipeline_vqa` → EarthDial-optical (mock) / CROMA-SAR (mock) |
-| Captioning (additional single-image) | M3 VLM / M5 | Mocked | `pipeline_caption` → EarthDial-optical / CROMA-SAR |
-| Multitemporal change description | M4 Change / M5 | **Real (deterministic)** | NDVI/NDWI delta, SAR log-ratio, verified |
-| Cross-modal optical+SAR analysis | M3+M4 / M5 | **Upgraded** | Optical→EarthDial, SAR→CROMA-S1+deterministic cross-check |
-| SAR change detection | M3+M4 / M5 | **Partial (deterministic)** | CROMA Siamese placeholder, deterministic log-ratio active |
-| SAR grounding | M5 Controller | **Optical-guided fallback** | SAREval <3% Acc@0.5 cited, optical→project box |
-| Agentic orchestration | M5 Controller | **Real** | 7 pipelines, full trace, confidence bands |
-| Input validation & compatibility | M5 Controller | **Real** | CRS, footprint, band checks |
-| Structured execution trace | M5 Controller | **Real** | `ExecutionTrace` on every response, SAR path named |
-| Confidence estimation | M5 Controller | **Real** | High/Med/Low bands, SAR cross-check lowers confidence |
-| Downloadable report | M6 API | **Real** | GET /report?query_id=...&format=json |
-| Interactive GUI/web app | Frontend (React) | **Real** | `frontend_ui/` at `npm run dev` |
-| GeoTIFF/TIFF handling | M0, M3, M4 | **Real** | `rasterio`-based throughout, 120×120 CROMA constraint |
-| Three-stage retrieval (SQL → text sim → fusion) | M2 Retrieval | **Real (64 scenes)** | sentence-transformers + FAISS |
 
 ## To Enable Real Inference
 
