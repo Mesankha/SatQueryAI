@@ -2,12 +2,10 @@
 
 Agentic remote-sensing vision-language assistant — natural-language and
 direct-image-upload analysis of satellite imagery (optical, SAR, and
-optical+SAR pairs)
+optical+SAR pairs, temporal pairs and do semantic retrieval(offline))
 
 > **Status:** Working prototype, demo-scope. See [docs/STATUS.md](docs/STATUS.md) for
 > exactly what's real vs. mocked, and why. See [docs/MODELS.md](docs/MODELS.md)
-> for model dependencies. See [docs/SatQuery_AI_Unified_Architecture_v3.md](docs/SatQuery_AI_Unified_Architecture_v3.md)
-> for full architecture and claims discipline.
 
 ## What it does
 
